@@ -12,6 +12,7 @@ obj_data = None
 draw_interval = 20  # ms  1000ms/frame
 rotate_angle = 0  # °
 rotate_speed = 30  # °/s
+scale = 1
 
 
 def init_window(win_size, win_pos, title):
@@ -52,15 +53,22 @@ def set_window(win_size):
 
 def draw():
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
-    glClearColor(0, 0.6, 1, 0)
+    glClearColor(0, 1, 0.7, 0)
 
     glLoadIdentity()
     gluLookAt(0.0, 5.0, 5.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0)
     glTranslatef(0, 0, 0)
     glRotate(rotate_angle, 0, 1, 0)
+    glScale(scale, scale, scale)
     glCallList(obj_data.gl_list)
 
     glutSwapBuffers()
+
+
+def mouse_wheel_callback(button, direction, x, y):
+    global scale
+    scale += direction * 0.1
+    glutPostRedisplay()
 
 
 def on_timer(value):
@@ -76,11 +84,8 @@ def display(file_path):
     read_obj_data(file_path)
 
     glutDisplayFunc(draw)
+    glutMouseWheelFunc(mouse_wheel_callback)
     glutTimerFunc(draw_interval, on_timer, 0)
     glutMainLoop()
 
-
-if __name__ == '__main__':
-    obj_file_path = "./resources/resources.obj"
-    display(obj_file_path)
 

@@ -64,6 +64,8 @@ class ObjData(object):
 
     def read_mtl_file(self, file_dir, file_name):
         file_path = file_dir + file_name
+        if not os.path.exists(file_path):
+            return
         mtl_now = None
         for line in open(file_path, "r"):
             if line.startswith('#'):
@@ -76,6 +78,9 @@ class ObjData(object):
             elif values[0] == 'map_Kd':
                 # 读取贴图文件
                 mtl_now[values[0]] = values[1]
+                image_path = file_dir + mtl_now['map_Kd']
+                if not os.path.exists(image_path):
+                    continue
                 surf = pygame.image.load(file_dir + mtl_now['map_Kd'])
                 image = pygame.image.tostring(surf, 'RGBA', 1)
                 ix, iy = surf.get_rect().size
@@ -96,11 +101,12 @@ class ObjData(object):
         glEnable(GL_TEXTURE_2D)
         glFrontFace(GL_CCW)
         for face in self.faces:
-            mtl_now = self.materials[face.mtl_name]
-            if 'texture_Kd' in mtl_now:
-                glBindTexture(GL_TEXTURE_2D, mtl_now['texture_Kd'])
-            else:
-                glColor(*mtl_now['Kd'])
+            if face.mtl_name in self.materials:
+                mtl_now = self.materials[face.mtl_name]
+                if 'texture_Kd' in mtl_now:
+                    glBindTexture(GL_TEXTURE_2D, mtl_now['texture_Kd'])
+                else:
+                    glColor(*mtl_now['Kd'])
             glBegin(GL_POLYGON)
             for point in face.points:
                 glNormal3fv(point.normal)

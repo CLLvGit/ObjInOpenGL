@@ -17,12 +17,12 @@ class DisPlayObjGUI(Frame):
 
     def make_main_win(self):
         file_frame = FrameUtil.make_entry_button(self.root, "obj文件", "选择", self.file_path_sv, self.fileopen)
-        play_button = FrameUtil.make_button(self.root, "显示", self.play_music)
+        play_button = FrameUtil.make_button(self.root, "显示", self.display)
 
         file_frame.grid(row=0, column=0, sticky=W)
         play_button.grid(row=1, column=0)
 
-    def play_music(self):
+    def display(self):
         path = self.file_path_sv.get()
         file_type = path.split('.')[-1]
         if not os.path.exists(path):
