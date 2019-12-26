@@ -37,7 +37,8 @@ class DisPlayObjGUI(Frame):
     def fileopen(self):
         file_type = [('obj', 'OBJ')]
         self.file_path_sv.set('')
-        file_name = askopenfilename(filetypes=file_type, initialdir=os.path.curdir + '/resources/')
+        print "open file:", os.path.pardir + '/resources/'
+        file_name = askopenfilename(filetypes=file_type, initialdir=os.path.pardir + '/resources/')
         if file_name:
             self.file_path_sv.set(file_name)
 
@@ -69,6 +70,7 @@ class FrameUtil:
 
 
 def main():
+    multiprocessing.freeze_support()
     root = Tk()
     root.title("显示模型")
     DisPlayObjGUI(root)
